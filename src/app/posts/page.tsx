@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import {
   DndContext,
   DragOverlay,
@@ -24,6 +24,7 @@ export default function PostsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [activePost, setActivePost] = useState<PostWithRelations | null>(null);
   const [overCategoryId, setOverCategoryId] = useState<number | null>(null);
 
@@ -60,12 +61,20 @@ export default function PostsPage() {
     );
   };
 
-  const filteredPosts =
-    selectedCategories.length === 0
-      ? posts
-      : posts.filter((post) =>
-          post.categories?.some((cat) => selectedCategories.includes(cat.id))
-        );
+  const query = searchQuery.toLowerCase().trim();
+
+  const filteredPosts = posts.filter((post) => {
+    if (selectedCategories.length > 0) {
+      if (!post.categories?.some((cat) => selectedCategories.includes(cat.id))) return false;
+    }
+    if (query) {
+      const title = (post.ogTitle?.replace(/\s*\|.*$/, "") || post.content?.split("\n")[0] || "").toLowerCase();
+      const content = (post.content || "").toLowerCase();
+      const author = (post.author?.name || "").toLowerCase();
+      if (!title.includes(query) && !content.includes(query) && !author.includes(query)) return false;
+    }
+    return true;
+  });
 
   const handleDragStart = (event: DragStartEvent) => {
     const postId = event.active.id as number;
@@ -154,6 +163,53 @@ export default function PostsPage() {
               <Plus className="h-5 w-5" />
             </PrimaryButton>
           </Link>
+        </div>
+
+        {/* Search bar */}
+        <div
+          className="group/search flex items-center gap-2 transition-all duration-200"
+          style={{
+            background: "#FAFAFA",
+            border: "1px solid #E5E5E5",
+            borderRadius: "8px",
+            padding: "8px 12px",
+            maxWidth: "400px",
+          }}
+          onFocusCapture={(e) => {
+            e.currentTarget.style.background = "#FFFFFF";
+            e.currentTarget.style.borderColor = "#B9B9B9";
+            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(11,102,194,0.08)";
+          }}
+          onBlurCapture={(e) => {
+            e.currentTarget.style.background = "#FAFAFA";
+            e.currentTarget.style.borderColor = "#E5E5E5";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          <Search size={15} color="#8A8A8A" style={{ flexShrink: 0 }} />
+          <input
+            type="text"
+            placeholder="Search posts, authors…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              flex: 1,
+              border: "none",
+              outline: "none",
+              background: "transparent",
+              fontFamily: "Source Sans 3, sans-serif",
+              fontSize: "14px",
+              color: "#010101",
+            }}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              style={{ color: "#8A8A8A", lineHeight: 1, background: "none", border: "none", cursor: "pointer", padding: 0 }}
+            >
+              ×
+            </button>
+          )}
         </div>
 
         {/* Category Filter Chips */}
