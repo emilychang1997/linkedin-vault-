@@ -5,7 +5,7 @@ import { getCategoryColor } from "@/lib/category-colors";
 
 interface CategoryStat {
   category: {
-    id: string;
+    id: number;
     name: string;
     slug: string;
   };
