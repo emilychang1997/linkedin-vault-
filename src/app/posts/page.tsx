@@ -17,13 +17,7 @@ import { PrimaryButton } from "@/components/primary-button";
 import { PostCard } from "@/components/post-card";
 import { DraggablePostCard } from "@/components/draggable-post-card";
 import { DroppableCategoryChip } from "@/components/droppable-category-chip";
-import type { PostWithRelations } from "@/types";
-
-interface Category {
-  id: number;
-  name: string;
-  slug: string;
-}
+import type { PostWithRelations, Category } from "@/types";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<PostWithRelations[]>([]);
