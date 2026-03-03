@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1771279998344,
+      "tag": "0000_dazzling_hedge_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1771297871201,
+      "tag": "0001_first_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1771552071255,
+      "tag": "0002_glorious_mindworm",
+      "breakpoints": true
+    }
+  ]
+}
