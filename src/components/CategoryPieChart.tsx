@@ -58,7 +58,6 @@ export function CategoryPieChart({ categoryStats }: CategoryPieChartProps) {
           })}
         </Pie>
         <Tooltip
-          formatter={(value: number, name: string) => [value, name]}
           contentStyle={{
             fontFamily: "Source Sans 3, sans-serif",
             fontSize: "14px",
