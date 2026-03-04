@@ -43,3 +43,7 @@ yarn-error.log*
 *.zip
 Primitives/
 Tokens/
+
+# Uploaded files (stored in Vercel Blob)
+public/uploads/
+linkedin_post_attachments/

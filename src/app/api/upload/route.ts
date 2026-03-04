@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 import { db } from "@/lib/db";
 import { attachments } from "@/lib/db/schema";
 
@@ -18,25 +17,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Generate unique filename
     const timestamp = Date.now();
     const fileName = `${timestamp}-${file.name}`;
-    const filePath = path.join(process.cwd(), "public/uploads", fileName);
 
-    // Write file to disk
-    await writeFile(filePath, buffer);
+    const blob = await put(fileName, file, { access: "public" });
 
-    // Save file metadata to database
     const [attachment] = await db
       .insert(attachments)
       .values({
         postId: postId ? parseInt(postId) : null,
         authorId: authorId ? parseInt(authorId) : null,
         fileName: file.name,
-        filePath: `/uploads/${fileName}`,
+        filePath: blob.url,
         fileType: file.type,
         fileSize: file.size,
         description: description || null,
